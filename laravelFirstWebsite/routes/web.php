@@ -60,3 +60,9 @@ Route::get('/middleware/{age}', function ($age){
 	return view('age', array('age'=>$age));
     //return 'Hello World<br> <a href="/foo"> Go to Foo Page</a>';
 })->middleware('age');
+
+Route::get('/pages/contact', 'PagesController@contactPage');
+
+Route::get('/pages/middleware/{age}', 'PagesController@middlewareAgePage');
+Route::get('/pages/shoutout/{text}', 'PagesController@shoutoutPage')->name('shoutout');
+Route::get('/crushes','CrushesController@index');
