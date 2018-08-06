@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Crush;
+use Carbon\Carbon;
 
 class CrushesController extends Controller
 {
@@ -25,7 +26,11 @@ class CrushesController extends Controller
      */
     public function create()
     {
-        //
+        $crush = new Crush();
+        return view('crushes.create', array('crush'       =>$crush,
+                                            'action'      =>route('crushes.store'),
+                                            'submit_text' =>"Create Crush")
+    );
     }
 
     /**
@@ -36,7 +41,10 @@ class CrushesController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $crush = new Crush();
+       $this->setAndSaveCrushData($crush, $request);
+
+        return redirect()->route('crushes.index');
     }
 
     /**
@@ -58,7 +66,11 @@ class CrushesController extends Controller
      */
     public function edit($id)
     {
-        //
+        $crush = Crush::find($id);
+        return view('crushes.create', array('crush'       =>$crush,
+                                            'action'      =>route('crushes.id.update', array('id'=>$crush->id) ),
+                                            'submit_text' =>"Update Crush")
+    );
     }
 
     /**
@@ -70,7 +82,9 @@ class CrushesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $crush = Crush::find($id);
+        $this->setAndSaveCrushData($crush, $request);
+        return redirect() ->route('crushes.index');
     }
 
     /**
@@ -81,6 +95,20 @@ class CrushesController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $crush = Crush::find($id);
+        $crush->delete();
+
+        return redirect()->back();
     }
+
+private function setAndSaveCrushData($crush, $request){
+        $crush->first_name = $request->first_name;
+        $crush->last_name = $request->last_name;
+        $crush->fb_profile_link = $request->fb_profile_link;
+        $crush->contact_number = $request->contact_number;
+        $crush->created_at = Carbon::now();
+        $crush->updated_at = Carbon::now();
+        $crush->save();
+}
+
 }
